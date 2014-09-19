@@ -1,0 +1,9 @@
+%= form_for 'do_login' => (method => 'POST') => begin
+    %= label_for username => 'Username'
+    %= text_field 'username'
+
+    %= label_for password => 'Password'
+    %= password_field 'password'
+
+    %= submit_button 'Log me in', class => 'btn'
+% end
