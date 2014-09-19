@@ -1,0 +1,21 @@
+% use DateTime;
+
+<h2>Restricted area</h2>
+<h3>Create new post</h3>
+
+%= form_for 'publish_post' => (method => 'POST') => begin
+    <div>
+    %= label_for title => 'Title'
+    <br/>
+    %= text_field 'title'
+    </div>
+
+    <div>
+    %= label_for content => 'Post Content'
+    <br/>
+    %= text_area 'content', cols => 40, rows => 20
+    </div>
+
+    %= submit_button 'Publish', class => 'btn'
+% end
+

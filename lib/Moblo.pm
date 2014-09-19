@@ -1,5 +1,6 @@
 package Moblo;
 use Mojo::Base 'Mojolicious';
+use Moblo::Schema;
 
 sub startup {
     my $self = shift;
@@ -28,6 +29,17 @@ sub startup {
 
     my $authorized = $r->bridge('/admin')->to('Login#is_logged_in');
     $authorized->get('/')->name('restricted_area')->to(template => 'admin/overview');
+
+    # Write new post
+    $authorized->get('/create')->name('create_post')->to(template => 'admin/create_post');
+    $authorized->post('/create')->name('publish_post')->to('Post#create');
+
+    # Delete post
+    $authorized->get('/delete/:id', [id => qr/\d+/])->name('delete_post')->to(template => 'admin/delete_post_confirm');
+    $authorized->post('/delete/:id', [id => qr/\d+/])->name('delete_post_confirmed')->to('Post#delete');
+
+    my $schema = Moblo::Schema->connect('dbi:SQLite:moblo.db');
+    $self->helper(db => sub { return $schema; });
 
     # Logout route
     $r->route('/logout')->name('do_logout')->to(cb => sub {

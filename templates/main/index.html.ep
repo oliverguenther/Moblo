@@ -1,7 +1,23 @@
 <h2>Moblo &mdash; Blog Index</h2>
 <p>Welcome to Moblo!</p>
 <h3>Post Index</h3>
-<p>None! :/</p>
+
+% my $posts = db->resultset('Post'); 
+% if ($posts->count == 0) {
+  <p>None :/<p>
+% }
+
+% while (my $post = $posts->next) {
+  <div class="post">
+    <h4>
+        <%= $post->title %> 
+        <br/>
+        <small>(published: <%= $post->date_published %>)</small>
+    </h4>
+    <p><%= $post->content %></p>
+  </div>
+% }
+
 <hr>
 <p>
     %= link_to Login => 'login_form'

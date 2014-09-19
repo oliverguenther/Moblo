@@ -1,1 +1,23 @@
 <h2>Restricted area</h2>
+
+% if (flash 'post_saved') {
+    <p>Your post was saved!</p>
+% }
+
+% if (flash 'post_deleted') {
+    <p>Post successfully deleted!</p>
+% }
+
+% my $posts = db->resultset('Post');
+% while (my $post = $posts->next) {
+  <div class="post">
+      <p>
+        <%= $post->title %>
+        <br/>
+        <%= link_to "Delete Post", 'delete_post' => { id => $post->id } %>
+      </p>
+  </div>
+% }
+
+%= link_to "Create new post" => 'create_post'
+

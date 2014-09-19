@@ -1,0 +1,7 @@
+<h2>Confirm Deletion</h2>
+
+<p>Do you really want to delete the post <%= stash('id') %> ? </p>
+%= form_for 'delete_post_confirmed' => { id => stash('id') } => (method => 'POST') => begin
+    %= submit_button 'Delete', class => 'btn'
+% end
+
