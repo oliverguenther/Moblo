@@ -17,6 +17,11 @@ sub startup {
     # Expiration reduced to 10 Minutes
     $self->app->sessions->default_expiration('600');
 
+    # Plugins
+
+    # Bcrypt with cost factor 8
+    $self->plugin('bcrypt', { cost => 8 });
+
     # Router
     my $r = $self->routes;
 
@@ -26,6 +31,9 @@ sub startup {
     # Login routes
     $r->get('/login')->name('login_form')->to(template => 'login/login_form');
     $r->post('/login')->name('do_login')->to('Login#on_user_login');
+
+    # View posts
+    $r->get('/post/:id', [id => qr/\d+/])->name('show_post')->to('Post#show');
 
     my $authorized = $r->bridge('/admin')->to('Login#is_logged_in');
     $authorized->get('/')->name('restricted_area')->to(template => 'admin/overview');
@@ -38,7 +46,10 @@ sub startup {
     $authorized->get('/delete/:id', [id => qr/\d+/])->name('delete_post')->to(template => 'admin/delete_post_confirm');
     $authorized->post('/delete/:id', [id => qr/\d+/])->name('delete_post_confirmed')->to('Post#delete');
 
-    my $schema = Moblo::Schema->connect('dbi:SQLite:share/moblo-schema.db');
+    # Create comments
+    $authorized->post('/post/:id/comments', [id => qr/\d+/])->name('create_comment')->to('Post#comment');
+
+    my $schema = Moblo::Schema->connect('dbi:SQLite:share/moblo-schema.db', '', '', {sqlite_unicode => 1});
     $self->helper(db => sub { return $schema; });
 
     # Logout route

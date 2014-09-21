@@ -1,8 +1,8 @@
-package Moblo::Schema::Result::Post;
+package Moblo::Schema::Result::User;
 use base qw/DBIx::Class::Core/;
 
 # Associated table in database
-__PACKAGE__->table('posts');
+__PACKAGE__->table('users');
 
 # Column definition
 __PACKAGE__->add_columns(
@@ -12,41 +12,40 @@ __PACKAGE__->add_columns(
         is_auto_increment => 1,
     },
 
-    author_id => {
-        data_type => 'integer',
-    },
-
-    title => {
+    pw_hash => {
         data_type => 'text',
     },
 
-    content => {
+    username => {
         data_type => 'text',
     },
 
-    date_published => {
-        data_type => 'datetime',
+    fullname => {
+        data_type => 'text',
     },
 
+);
+
+__PACKAGE__->add_unique_constraint(
+    [ qw/username/ ],
 );
 
 # Tell DBIC that 'id' is the primary key
 __PACKAGE__->set_primary_key('id');
 
-
-__PACKAGE__->belongs_to(
+__PACKAGE__->has_many(
     # Name of the accessor for this relation
-    author =>
+    posts =>
     # Foreign result class
-    'Moblo::Schema::Result::User',
-    # Foreign key in THIS table
+    'Moblo::Schema::Result::Post',
+    # Foreign key in the table 'posts'
     'author_id'
 );
 
 __PACKAGE__->has_many(
     comments =>
     'Moblo::Schema::Result::Comment',
-    'post_id'
+    'user_id'
 );
 
 1;

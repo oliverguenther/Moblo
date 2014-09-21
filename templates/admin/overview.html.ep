@@ -12,9 +12,11 @@
 % while (my $post = $posts->next) {
   <div class="post">
       <p>
-        <%= $post->title %>
+        <a href="<%= url_for('show_post', id => $post->id) %>">
+	        %= $post->title
+	      </a>
         <br/>
-        <%= link_to "Delete Post", 'delete_post' => { id => $post->id } %>
+        %= link_to "Delete Post", 'delete_post' => { id => $post->id }
       </p>
   </div>
 % }
