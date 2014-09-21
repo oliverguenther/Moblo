@@ -38,7 +38,7 @@ sub startup {
     $authorized->get('/delete/:id', [id => qr/\d+/])->name('delete_post')->to(template => 'admin/delete_post_confirm');
     $authorized->post('/delete/:id', [id => qr/\d+/])->name('delete_post_confirmed')->to('Post#delete');
 
-    my $schema = Moblo::Schema->connect('dbi:SQLite:moblo.db');
+    my $schema = Moblo::Schema->connect('dbi:SQLite:share/moblo-schema.db');
     $self->helper(db => sub { return $schema; });
 
     # Logout route
