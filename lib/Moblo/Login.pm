@@ -12,12 +12,18 @@ sub is_logged_in {
     );
 }
 
-# Mocked function to check the correctness
-# of a username/password combination.
 sub user_exists {
     my ($username, $password) = @_;
 
-    return ($username eq 'foo' && $password eq 'bar');
+    # Determine if a user with 'username' exists
+    my $user = $self->db->resultset('User')
+        ->search({ username => $username })->first;
+
+    # Validate password against hash, return user object
+    return $user if (
+        defined $user &&
+        $self->bcrypt_validate( $password, $user->pw_hash )
+    );
 }
 
 sub on_user_login {
@@ -27,10 +33,11 @@ sub on_user_login {
     my $username = $self->param('username');
     my $password = $self->param('password');
 
-    if (user_exists($username, $password)) {
+    if (my $user = user_exists($username, $password)) {
 
         $self->session(logged_in => 1);
         $self->session(username => $username);
+        $self->session(user_id => $user->id);
 
         $self->redirect_to('restricted_area');
     } else {

@@ -10,11 +10,12 @@
 % while (my $post = $posts->next) {
   <div class="post">
     <h4>
+      <a href="<%= url_for('show_post') %>"
         <%= $post->title %> 
         <br/>
         <small>(published: <%= $post->date_published %>)</small>
+      </h4>
     </h4>
-    <p><%= $post->content %></p>
   </div>
 % }
 

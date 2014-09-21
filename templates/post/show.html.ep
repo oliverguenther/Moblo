@@ -1,0 +1,33 @@
+<h2>Moblo &mdash; Blog</h2>
+<h3><%= $post->title %></h3>
+
+<div>
+  <p>
+    %= $post->content
+  </p>
+</div>
+
+% my $comments = $post->comments;
+% if ($comments->count > 0) {
+  <h3>Comments</h3>
+  % while (my $comment = $comments->next) {
+    <div class="comment">
+      <span>From <%= $comment->commenter->fullname %>, posted <%= $comment->created_at %></span>
+      <p>
+        %= $post->content
+      </p>
+    </div>
+  % }
+% }
+
+%# Allow comments, if user is logged in.
+% if ($logged_in) {
+  <h3>Write comment</h3>
+  <form action="<%= url_for('create_comment') %>" method="POST">
+    <span>Writing comment as <%= $user->fullname %></span>
+    <div>
+      <label for="content">Comment Text</label>
+      <input type="text" name="content" placeholder="Your comment" />
+    </div>
+  </form>
+% }
