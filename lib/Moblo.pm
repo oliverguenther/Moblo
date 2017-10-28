@@ -35,7 +35,7 @@ sub startup {
     # View posts
     $r->get('/post/:id', [id => qr/\d+/])->name('show_post')->to('Post#show');
 
-    my $authorized = $r->bridge('/admin')->to('Login#is_logged_in');
+    my $authorized = $r->under('/admin')->to('Login#is_logged_in');
     $authorized->get('/')->name('restricted_area')->to(template => 'admin/overview');
 
     # Write new post
